@@ -2,19 +2,18 @@ const mongoose = require("mongoose");
 
 const ContentSchema = mongoose.Schema(
     {
-        email : String,
-        nickname: String,
-        title : String,
-        content: String,
-        imageURL : [String],
-        createAt : String,
-        updateAt : String
-    },
-);
+        userId: String,
+        content: String, 
+        title: String, 
+        imageURL: [String], 
+        creatAt: String, 
+        updateAt : String,
+
+        });
 
 // const Content = mongoose.model('Content', ContentSchema);
 
-ContentSchema.virtual('contentId').get(function () { 
+ContentSchema.virtual('postId').get(function () { 
     return this._id.toHexString(); 
 });
 
