@@ -17,11 +17,11 @@ router.get('/search', ContentController.SearchContent);
 
 
 // 게시글 수정 API(put)
-router.patch('/:contentId', authMiddleware, ContentController.modifyContent);
+router.patch('/:postId', authMiddleware, ContentController.modifyContent);
 
 
 // ******************************************************************
 // 게시글 삭제 API(email, articleId 같이 맞으면 삭제)
-router.delete('/:contentId', authMiddleware, ContentController.deleteContent);
+router.delete('/:postId', authMiddleware, ContentController.deleteContent);
 
 module.exports = router;
