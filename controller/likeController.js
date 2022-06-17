@@ -21,8 +21,12 @@ async function like(req, res) {
 async function totalLike(req, res) {
     const { postId } = req.params;
     const findAllLike = await Like.find({ postId });
-    res.status(200).json(findAllLike);
-}
+    try {
+        res.status(200).json({ findAllLike, Message: "좋아요를 잘 가져왔음!" });
+    } catch (error) {
+        res.status(400).json({ errorMessage: "좋아요가 없습니다!" })
+    };
+};
 
 //좋아요 취소
 async function deletelike(req, res) {
@@ -30,13 +34,16 @@ async function deletelike(req, res) {
     const { postId } = req.params;
 
     const findLike = await Like.findOne({ postId, userId });
+    try {
+        if (!findLike) {
+            return res.status(400).send({ errorMessage: "좋아요를 하지 않았습니다." });
+        }
 
-    if (!findLike) {
-        return res.status(400).send({ errorMessage: "좋아요를 하지 않았습니다." });
+        const unLike = await Like.deleteOne(findLike);
+        res.status(200).json({ unLike, msg: "좋아요 취소 완료!" });
+    } catch (error) {
+        res.status(400).json({ errorMessage: "좋아요 삭제 에러!" })
     }
-
-    const unLike = await Like.deleteOne(findLike);
-    res.status(200).json({ unLike, msg: "좋아요 취소 완료!" });
 }
 
 module.exports.like = like;
