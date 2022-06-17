@@ -1,86 +1,86 @@
 const Comment = require("../models/comment");
+const moment = require("moment");
+require("moment-timezone");
 
+//댓글 작성
 async function postcom(req, res) {
-    const { nickname } = res.locals.user;
-    const { comment } = req.body;
-    const { contentId } = req.params;
-    const contentcomment = await Comment.create({
-        comment,
-        nickname,
-        contentId
-    });
-    console.log(contentcomment);
-    res.status(201).json({ contentcomment, msg: "댓글이 등록되었습니다." });
-};
+  const { nickname } = res.locals.user;
+  const { comment } = req.body;
+  const { contentId } = req.params;
 
+  const createAt = moment().format("YYYY-MM-DD HH:mm:ss");
+  const updateAt = moment().format("YYYY-MM-DD HH:mm:ss");
 
-async function getcom (req, res)  {
-    const { contentId } = req.params;
-    const comment = await Comment.find({
-        contentId: String(contentId),
-    })
-        .sort("-updateAt")
-        .exec();
+  // toLocalDateString("Ko-KR")
+  // toLocalTimeString("Ko-KR")
 
-    res.status(201).json({
-        comment,
-    });
+  const contentcomment = await Comment.create({
+    comment,
+    nickname,
+    contentId,
+    createAt,
+    updateAt
+  });
+  console.log(contentcomment);
 
-};
+  res.status(201).json({ contentcomment, msg: "댓글이 등록되었습니다." });
+  console.log(contentcomment);
+}
 
-async function patchcom (req, res)  {
-    const { commentId } = req.params;
-    const { fixedCommentContent } = req.body;
+//댓글조회
+async function getcom(req, res) {
+  const { contentId } = req.params;
 
-    // function timesetkr() {
-    //     const gettime = new Date(); 
-    //     const utcNow =
-    //     gettime.getTime() + gettime.getTimezoneOffset() * 60 * 1000;
-    //     const koreaTimeDiff = 9 * 60 * 60 * 1000;
-    //     const krtime = new Date(utcNow + koreaTimeDiff);
-    // }
-    // timesetkr();
-    // if (krtime !== comment.updateAt) {
-    //     await Comment.findByIdAndUpdate(updateAt, { krtime });
-    // }
+  const comment = await Comment.find({ contentId }).sort("-updateAt");
 
-    if (commentId) {
+  res.status(201).json({
+    comment,
+  });
+}
+
+//댓글 수정
+async function patchcom(req, res) {
+  const { nickname } = res.locals.user;
+  const { commentId } = req.params;
+  const { comment } = req.body;
+
+  const findComment = await Comment.findById(commentId);
+  const UpdateAt = moment().format("YYYY-MM-DD HH:mm:ss");
+
+  try {
+    if (findComment === null || nickname !== findComment.nickname) {
+      return res.status(400).json({ errorMessage: "접근 권한이 없습니다!" });
+    }
+
     const fixedComment = await Comment.findByIdAndUpdate(commentId, {
-        $set: { comment: fixedCommentContent },
-    });
-    res.status(201).json({
-        fixedComment,
-        msg: "댓글이 수정되었습니다.",
-    });
-    } else {
-    res.status(400).json({
-        msg: "댓글 수정에 실패했습니다.",
-        });
-    };
-};
+      $set: { comment: comment ,updateAt: UpdateAt}});
+    res.status(201).json({ fixedComment, msg: "댓글이 수정되었습니다." });
+    
+  } catch (err) {
+    res.status(400).json({ errorMessage: "댓글 수정에 실패하였습니다." });
+  }
+}
 
 // *** 댓글 삭제 API
-async function delcom (req, res) {
-const { commentId } = req.params;
+async function delcom(req, res) {
+  const { nickname } = res.locals.user;
+  const { commentId } = req.params;
+  const findComment = await Comment.findById(commentId);
 
-if (Comment) {
+  if (findComment === null) {
+    return res.status(400).json({ errorMessage: "접근 권한이 없습니다!" });
+  }
+
+  if (findComment !== null && nickname === findComment.nickname) {
     await Comment.findByIdAndDelete(commentId); // commentId 일치하는 것으로 삭제
     res.status(200).json({
-        result: "success",
-        msg: "코멘트가 삭제되었습니다.",
+      result: "success",
+      msg: "코멘트가 삭제되었습니다.",
     });
-} else {
-    res.status(400).json({
-        result: "error",
-        msg: "코멘트가 정상적으로 삭제되지 않았습니다.",
-        });
-    }
+  }
 };
 
-
 module.exports.postcom = postcom;
-//module.exports.commentList = commentList;
 module.exports.patchcom = patchcom;
-//module.exports.getpatchedcom = getpatchedcom;
 module.exports.delcom = delcom;
 module.exports.getcom = getcom;

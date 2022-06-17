@@ -41,7 +41,7 @@ function getSelfInfo(callback) {
             console.log('비회원 입장');
         },
     });
-}
+};
 
 // 로그아웃 함수
 function signOut() {
@@ -52,4 +52,4 @@ function signOut() {
     } else {
         return false;
     }
-}
+};

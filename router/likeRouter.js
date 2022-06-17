@@ -14,4 +14,3 @@ router.delete('/:contentId/:likeId', authMiddleware, likeController.deletelike);
 
 
 module.exports = router;
-

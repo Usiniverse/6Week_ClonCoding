@@ -12,6 +12,10 @@ router.post('/', authMiddleware, ContentController.writeContent);
 router.get('/', ContentController.ContentList);
 
 
+// 게시글 찾기 API
+router.get('/search', ContentController.SearchContent);
+
+
 // 게시글 수정 API(put)
 router.patch('/:contentId', authMiddleware, ContentController.modifyContent);
 

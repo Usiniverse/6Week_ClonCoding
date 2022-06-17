@@ -4,26 +4,22 @@ const Like = require("../models/like");
 async function like(req, res) {
   const { nickname } = res.locals.user;
   const { contentId } = req.params;
-  console.log(contentId)
 
-  const findLike = await Like.find({ nickname });
-  console.log(findLike)
-    for(let i=0; i<findLike.length; i++){
-        if(contentId === findLike[i].contentId && nickname === findLike[i].nickname){
+  const findLike = await Like.findOne({ contentId, nickname });
+        if(findLike){
             return res.status(400).send({errorMessage: "이미 좋아요를 하셨습니다!"})
-        }}
-    
+        }
         const like = await Like.create({
             nickname,
             contentId,
           });
     
           return res.status(201).json({ like, msg: "좋아요 완료!" });
-   }
+  }
 
 //좋아요 조회
 async function totalLike(req, res) {
-    const { contentId } = req.params;
+  const { contentId } = req.params;
   const findAllLike = await Like.find({contentId});
   res.status(200).json(findAllLike);
 }
@@ -31,14 +27,15 @@ async function totalLike(req, res) {
 //좋아요 취소
 async function deletelike(req, res) {
   const { nickname } = res.locals.user;
+  const { contentId } = req.params;
 
-  const findLike = await Like.findOne({ nickname });
+  const findLike = await Like.findOne({ contentId, nickname });
 
   if (!findLike) {
-    res.status(400).send({ errorMessage: "좋아요를 하지 않았습니다." });
+    return res.status(400).send({ errorMessage: "좋아요를 하지 않았습니다." });
   }
 
-  const unLike = await Like.findByIdAndDelete(findLike);
+  const unLike = await Like.deleteOne(findLike);
   res.status(200).json({ unLike, msg: "좋아요 취소 완료!" });
 }
 

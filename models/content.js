@@ -7,8 +7,9 @@ const ContentSchema = mongoose.Schema(
         title : String,
         content: String,
         imageURL : [String],
+        createAt : String,
+        updateAt : String
     },
-    { timestamps: true }
 );
 
 // const Content = mongoose.model('Content', ContentSchema);

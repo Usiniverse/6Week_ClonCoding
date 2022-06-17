@@ -12,12 +12,12 @@ const UserSchema = Joi.object({
     nickname: 
         Joi.string()
         .required()
-        .pattern(new RegExp('^[0-9a-zA-Z@$!%#?&]{3,10}$')),
+        .pattern(new RegExp('^[ㄱ-ㅎ가-힣0-9a-zA-Z@$!%#?&]{3,8}$')),
     
     password: 
         Joi.string()
         .required()
-        .min(3),
+        .pattern(new RegExp('^[ㄱ-ㅎ가-힣0-9a-zA-Z@$!%#?&]{3,10}$')),
     
     confirmPassword: 
         Joi.string()
@@ -60,8 +60,9 @@ async function signUp (req, res) {
 async function login(req, res) {
     const { email, password } = req.body;
     const user = await userDB.findOne({email});
+    const nickname = user.nickname
 
-     if(!user){
+    if(!user){
         return res.status(400).send({errorMessage: "회원정보가 없습니다!"});
     }
 
@@ -72,16 +73,19 @@ async function login(req, res) {
 
        //비밀번호까지 맞다면 토큰을 생성하기.
         const token = jwt.sign({ authorId: user.authorId }, "yushin-secret-key");
-        res.status(200).send({ message : "로그인에 성공했습니다." , token });
+        res.status(200).send({ message : "로그인에 성공했습니다." , email, nickname, token });
     }
 
 //사용자 인증
 async function checkMe(req, res) {
     const { user } = res.locals;
     res.send({
-        user,
+        user:{
+            nickname: user.nickname,
+            email: user.email
+        }
     });
-    };
+};
 
 
 module.exports.signUp = signUp;
