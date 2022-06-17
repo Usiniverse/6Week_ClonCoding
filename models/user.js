@@ -3,8 +3,8 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10; //10자리로 암호화
 
 const UserSchema = new mongoose.Schema({
+  userId: String,
   email: String,
-  nickname: String,
   password: String,
   confirmPassword: String,
 });

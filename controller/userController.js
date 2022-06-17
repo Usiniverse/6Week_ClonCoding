@@ -4,15 +4,15 @@ const Joi = require("joi");
 const bcrypt = require("bcrypt");
 
 const UserSchema = Joi.object({
-    email:
+    userId:
+        Joi.string()
+        .required()
+        .min(3),
+    
+    email: 
         Joi.string()
         .required()
         .pattern(new RegExp('^[0-9a-zA-Z]+@+[0-9a-zA-Z]+.+[a-zA-Z]$')),
-    
-    nickname: 
-        Joi.string()
-        .required()
-        .pattern(new RegExp('^[ㄱ-ㅎ가-힣0-9a-zA-Z@$!%#?&]{3,8}$')),
     
     password: 
         Joi.string()
@@ -29,25 +29,25 @@ const UserSchema = Joi.object({
 //회원가입
 async function signUp (req, res) {
     try{
-    const { email, nickname, password, confirmPassword } = await UserSchema.validateAsync(req.body);
+    const { userId, email, password, confirmPassword } = await UserSchema.validateAsync(req.body);
 
     if (password !== confirmPassword) {
         return res.status(400).send({ errorMessage: '비밀번호와 비밀번호 확인의 내용이 일치하지 않습니다.', });
     }
     
-    const existUsers = await userDB.findOne({email});
+    const existUsers = await userDB.findOne({userId});
     if(existUsers){
-        return res.status(400).send({errorMessage: '중복된 이메일입니다.',});
+        return res.status(400).send({errorMessage: '중복된 아이디입니다.',});
     }
-    // false 인경우 email check X
-    const existUsersNickname = await userDB.findOne({nickname});
-    if(existUsersNickname){
-        return res.status(400).send({ errorMessage: '중복된 닉네임입니다.', });
+    
+    const existUsersEmail = await userDB.findOne({email});
+    if(existUsersEmail){
+        return res.status(400).send({ errorMessage: '중복된 이메일입니다.', });
         }
 
     res.status(201).send({ message : "회원가입에 성공했습니다."});
 
-    const users = new userDB({ email, nickname, password });
+    const users = new userDB({ userId, email, password });
     await users.save();
 
 } catch(err) {
@@ -58,9 +58,8 @@ async function signUp (req, res) {
 
 //로그인
 async function login(req, res) {
-    const { email, password } = req.body;
-    const user = await userDB.findOne({email});
-    const nickname = user.nickname
+    const { userId, password } = req.body;
+    const user = await userDB.findOne({userId});
 
     if(!user){
         return res.status(400).send({errorMessage: "회원정보가 없습니다!"});
@@ -73,7 +72,7 @@ async function login(req, res) {
 
        //비밀번호까지 맞다면 토큰을 생성하기.
         const token = jwt.sign({ authorId: user.authorId }, "yushin-secret-key");
-        res.status(200).send({ message : "로그인에 성공했습니다." , email, nickname, token });
+        res.status(200).send({ message : "로그인에 성공했습니다." , userId, token });
     }
 
 //사용자 인증
@@ -81,8 +80,7 @@ async function checkMe(req, res) {
     const { user } = res.locals;
     res.send({
         user:{
-            nickname: user.nickname,
-            email: user.email
+            userId: user.userId
         }
     });
 };
