@@ -29,15 +29,15 @@ async function writeContent (req, res) {
 // 게시글 수정 API(patch)
 async function modifyContent (req, res) {
     const { userId } = res.locals.user
-    const { contentId } = req.params;
+    const { postId } = req.params;
     const { title, content, updateAt, imageURL } = req.body;
-    const findContent = await Content.findById(contentId);
+    const findContent = await Content.findById(postId);
 
     if(userId !== findContent.userId){
         await res.status(400).json({errorMessage : "접근 권한이 없습니다!"})
     }
         
-    const modifyPosting = await Content.findByIdAndUpdate(contentId, {
+    const modifyPosting = await Content.findByIdAndUpdate(postId, {
         $set: { title: title, content: content, updateAt: updateAt, imageURL: imageURL },
     });
     res.status(201).json({
@@ -50,15 +50,15 @@ async function modifyContent (req, res) {
 // 게시글 삭제 API
 async function deleteContent (req, res) {
     const { userId } = res.locals.user
-    const { contentId } = req.params;
-    const findContent = await Content.findById(contentId);
+    const { postId } = req.params;
+    const findContent = await Content.findById(postId);
 
     if(userId !== findContent.userId){
         return res.status(400).json({errorMessage : "접근 권한이 없습니다!"})
     }
 
     if (findContent) {
-        await Content.findByIdAndDelete(contentId);
+        await Content.findByIdAndDelete(postId);
         res.status(200).json({
             result: 'success',
             msg: '글이 삭제되었습니다.',

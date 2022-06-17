@@ -13,7 +13,7 @@ const ContentSchema = mongoose.Schema(
 
 // const Content = mongoose.model('Content', ContentSchema);
 
-ContentSchema.virtual('contentId').get(function () { 
+ContentSchema.virtual('postId').get(function () { 
     return this._id.toHexString(); 
 });
 
