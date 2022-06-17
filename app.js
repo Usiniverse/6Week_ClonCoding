@@ -4,26 +4,27 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const userRouter = require('./router/userRouter');
 const ContentRouter = require('./router/contentRouter');
-const commentRouter = require('./router/commentRouter')
 const LikeController = require('./router/likeRouter');
 const connectDB = require('./database/db');
 const reqLogMiddleware = require('./middlewares/request-log-middleware');
 
 const port = 8080;
 
+// ============================
+// CORS Access - Origin
 const corsOption = {
-    origin: 
-    ["http://localhost:3000",
-    "http://reactweek04.s3-website.ap-northeast-2.amazonaws.com"],
+    origin: ["http://localhost:3000",
+        ""
+    ],
     credentials: true,
-    };
+};
 
 // ============================
 // DB 연결 - log
 connectDB();
 
 const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:")); 
+db.on("error", console.error.bind(console, "connection error:"));
 
 
 // ============================
@@ -39,12 +40,11 @@ app.use(reqLogMiddleware);
 app.use(cors(corsOption));
 
 // 라우터 등록
-app.get("/", (req,res)=> {
+app.get("/", (req, res) => {
     res.send("Backend Server")
 });
 app.use("/users", userRouter);
-app.use("/content", ContentRouter);
-app.use ("/comment", commentRouter);
+app.use("/post", ContentRouter);
 app.use("/like", LikeController);
 
 app.listen(port, () => {
