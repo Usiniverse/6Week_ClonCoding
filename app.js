@@ -8,7 +8,7 @@ const LikeController = require('./router/likeRouter');
 const connectDB = require('./database/db');
 const reqLogMiddleware = require('./middlewares/request-log-middleware');
 
-const port = 8080;
+const port = 8082;
 
 // ============================
 // CORS Access - Origin
