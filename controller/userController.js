@@ -71,7 +71,7 @@ async function login(req, res) {
     }
 
        //비밀번호까지 맞다면 토큰을 생성하기.
-        const token = jwt.sign({ authorId: user.authorId }, "yushin-secret-key");
+        const token = jwt.sign({ authorId: user.authorId }, "yushin-secret-key",{expiresIn: '24h'});
         res.status(200).send({ message : "로그인에 성공했습니다." , userId, token });
     }
 
