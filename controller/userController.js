@@ -3,6 +3,8 @@ const userDB = require("../models/user");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 
+require("dotenv").config();
+
 const UserSchema = Joi.object({
     userId:
         Joi.string()
@@ -71,7 +73,7 @@ async function login(req, res) {
     }
 
        //비밀번호까지 맞다면 토큰을 생성하기.
-        const token = jwt.sign({ authorId: user.authorId }, "yushin-secret-key",{expiresIn: '24h'});
+        const token = jwt.sign({ authorId: user.authorId }, process.env.SECRET_KEY,{expiresIn: '24h'});
         res.status(200).send({ message : "로그인에 성공했습니다." , userId, token });
     }
 
