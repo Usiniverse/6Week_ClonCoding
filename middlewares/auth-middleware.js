@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const userDB = require('../models/user');
 
+require("dotenv").config();
+
 module.exports = async (req, res, next) => {
     const { authorization } = req.headers;
     const [tokenType, tokenValue] = (authorization || "").split(' ');
@@ -12,7 +14,7 @@ module.exports = async (req, res, next) => {
         return;
     }
     try {
-        const { authorId } = jwt.verify(tokenValue, 'yushin-secret-key');
+        const { authorId } = jwt.verify(tokenValue, process.env.SECRET_KEY);
 
         const user = await userDB.findById(authorId);
         
