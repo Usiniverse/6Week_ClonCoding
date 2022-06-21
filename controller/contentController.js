@@ -1,36 +1,49 @@
 const Content = require("../models/content");
 const moment = require("moment");
 
+
 // 게시글 목록 조회 API
 async function ContentList (req, res) {
     const { page } = req.query;
+    // let contentList = []
 
     const contentList = await Content
     .find()
-    .sort({ CreateAt : 'desc' })
+    .sort({ createdAt : 'desc' })
 
-    res.status(200).json( contentList );
+    // const contents = contentList.map((writer) =>writer.userId);
+
+    res.status(200).json( {
+        contentList : contentList.map((a) => ({
+            createdAt: a.createdAt.toLocaleTimeString('ko-KR'),
+            userId : a.userId,
+            title: a.title,
+            content : a.content,
+            imageURL: a.imageURL,
+            price : a.price
+        })),
+     });
 };
 
 
 // 게시글 작성 API
 async function writeContent (req, res) {
     const { userId } = res.locals.user;
-    const { title, content, imageURL, CreateAt, updateAt} = req.body;
-
+    const { title, content, imageURL, price} = req.body;
+   
     const postContent = await Content.create({
-        userId, title, content, imageURL,  CreateAt, updateAt});
-
-    res.status(201).json({ postContent, msg: '글이 작성되었습니다!', });
+        userId, title, content, imageURL, price });
+        
+    res.status(201).json({ 
+        postContent, msg: '글이 작성되었습니다!',
+})
 };
-
-
 
 // 게시글 수정 API(patch)
 async function modifyContent (req, res) {
     const { userId } = res.locals.user
     const { postId } = req.params;
-    const { title, content, updateAt, imageURL } = req.body;
+    const { title, content, updateAt, imageURL , price} = req.body;
     const findContent = await Content.findById(postId);
 
     if(userId !== findContent.userId){
@@ -38,7 +51,7 @@ async function modifyContent (req, res) {
     }
         
     const modifyPosting = await Content.findByIdAndUpdate(postId, {
-        $set: { title: title, content: content, updateAt: updateAt, imageURL: imageURL },
+        $set: { title: title, content: content, updateAt: updateAt, imageURL: imageURL, price: price },
     });
     res.status(201).json({
         modifyPosting,
