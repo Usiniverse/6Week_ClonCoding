@@ -6,10 +6,15 @@ const ContentSchema = mongoose.Schema(
         content: String, 
         title: String, 
         imageURL: [String], 
-        creatAt: String, 
-        updateAt : String,
+        price : Number
 
-        });
+        },
+        
+        { timestamps: true },
+
+        );
+
+        
 
 // const Content = mongoose.model('Content', ContentSchema);
 
