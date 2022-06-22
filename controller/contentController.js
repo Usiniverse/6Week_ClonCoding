@@ -14,14 +14,12 @@ async function ContentList (req, res) {
     res.status(200).json( {
         contentList : contentList.map((a) => ({ 
             postId: a.postId,
-            createdAt: a.createdAt,
-            UpdateAt : a.UpdateAt,
             userId : a.userId,
             title: a.title,
             content : a.content,
             imageURL: a.imageURL,
             price : a.price
-        })),
+        })),CreateAt,UpdateAt
      });
 };
 
