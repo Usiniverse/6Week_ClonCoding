@@ -4,25 +4,19 @@ const moment = require("moment");
 
 // 게시글 목록 조회 API
 async function ContentList (req, res) {
-    const { page } = req.query;
-    // let contentList = []
-
-    const contentList = await Content
+   const contentList = await Content
     .find()
     .sort({ createdAt : 'desc' })
 
-    // const contents = contentList.map((writer) =>writer.userId);
-
-    res.status(200).json( {
-        contentList : contentList.map((a) => ({
-            postId: a._Id,
-            createdAt: a.createdAt.toLocaleTimeString('ko-KR'),
-            userId : a.userId,
-            title: a.title,
-            content : a.content,
-            imageURL: a.imageURL,
-            price : a.price
-        })),
+    res.status(200).json( { contentList
+        // contentList : contentList.map((a) => ({ 
+        //     createdAt: a.createdAt.toLocaleTimeString('ko-KR'),
+        //     userId : a.userId,
+        //     title: a.title,
+        //     content : a.content,
+        //     imageURL: a.imageURL,
+        //     price : a.price
+        // })),
      });
 };
 
