@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const userRouter = require('./router/userRouter');
 const ContentRouter = require('./router/contentRouter');
-const LikeController = require('./router/likeRouter');
+const LikeRouter = require('./router/likeRouter');
 const connectDB = require('./database/db');
 const reqLogMiddleware = require('./middlewares/request-log-middleware');
 
