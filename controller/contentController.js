@@ -1,7 +1,7 @@
 const Content = require("../models/content");
 const moment = require("moment");
-const moment = require("moment-timezone");
-moment.tz("Asia/Seoul");
+// const moment = require("moment-timezone");
+// moment.tz("Asia/Seoul");
 
 
 // 게시글 목록 조회 API
