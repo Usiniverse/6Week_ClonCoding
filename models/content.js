@@ -7,11 +7,10 @@ const ContentSchema = mongoose.Schema(
         title: String, 
         imageURL: [String], 
         price : String,
+        CreateAt: String,
+        UpdateAt: String,
 
         },
-        
-        { timestamps: true },
-
         );
 
         
