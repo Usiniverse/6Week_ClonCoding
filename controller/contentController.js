@@ -15,7 +15,7 @@ async function ContentList (req, res) {
 
     res.status(200).json( {
         contentList : contentList.map((a) => ({
-            postId: a.postId,
+            postId: a._Id,
             createdAt: a.createdAt.toLocaleTimeString('ko-KR'),
             userId : a.userId,
             title: a.title,
