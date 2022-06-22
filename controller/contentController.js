@@ -1,5 +1,5 @@
 const Content = require("../models/content");
-const moment = require("moment");
+const moment = require("moment-timezone");
 moment.tz("Asia/Seoul");
 
 
