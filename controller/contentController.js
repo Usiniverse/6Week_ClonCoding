@@ -31,7 +31,7 @@ async function writeContent (req, res) {
     const { title, content, imageURL, price} = req.body;
    
     var today = new Date();
-    const CreateAt = today.toLocaleTimeString('ko-KR');
+    const CreateAt = today.toTimeString('ko-KR',Options).format("YYYY-MM-DD HH:mm:ss");
    
     const postContent = await Content.create({
         userId, title, content, imageURL, price, CreateAt });
