@@ -9,7 +9,7 @@ async function ContentList (req, res) {
     .sort({ createdAt : 'desc' })
 
     var today = new Date();
-    const CreateAt = today.toLocaleTimeString('ko-KR');
+    const CreateAt = today.toTimeString('ko-KR',Options).format("YYYY-MM-DD HH:mm:ss");
 
     res.status(200).json( {
         contentList : contentList.map((a) => ({ 
