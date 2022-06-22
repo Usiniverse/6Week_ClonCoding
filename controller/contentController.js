@@ -13,7 +13,7 @@ async function ContentList (req, res) {
 
     res.status(200).json( { contentList
         contentList : contentList.map((a) => ({ 
-            CreatedAt: a.CreateAt,
+            CreateAt: a.CreateAt,
             UpdateAt: a.UpdateAt,
             userId : a.userId,
             title: a.title,
