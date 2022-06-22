@@ -45,7 +45,7 @@ app.get("/", (req, res) => {
 });
 app.use("/users", userRouter);
 app.use("/post", ContentRouter);
-app.use("/like", LikeController);
+app.use("/like", LikeRouter);
 
 app.listen(port, () => {
     console.log(port, "포트로 서버가 켜졌어요!")
