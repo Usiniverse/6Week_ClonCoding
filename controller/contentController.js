@@ -7,16 +7,20 @@ async function ContentList (req, res) {
    const contentList = await Content
     .find()
     .sort({ createdAt : 'desc' })
+   
+   const CreateAt = moment().format("YYYY-MM-DD HH:mm:ss");
+   const UpdateAt = moment().format("YYYY-MM-DD HH:mm:ss");
 
     res.status(200).json( { contentList
-        // contentList : contentList.map((a) => ({ 
-        //     createdAt: a.createdAt.toLocaleTimeString('ko-KR'),
-        //     userId : a.userId,
-        //     title: a.title,
-        //     content : a.content,
-        //     imageURL: a.imageURL,
-        //     price : a.price
-        // })),
+        contentList : contentList.map((a) => ({ 
+            CreatedAt: a.CreateAt,
+            UpdateAt: a.UpdateAt,
+            userId : a.userId,
+            title: a.title,
+            content : a.content,
+            imageURL: a.imageURL,
+            price : a.price
+        })),
      });
 };
 
@@ -26,8 +30,10 @@ async function writeContent (req, res) {
     const { userId } = res.locals.user;
     const { title, content, imageURL, price} = req.body;
    
+    const CreateAt = moment().format("YYYY-MM-DD HH:mm:ss");
+   
     const postContent = await Content.create({
-        userId, title, content, imageURL, price });
+        userId, title, content, imageURL, price, CreateAt });
         
     res.status(201).json({ 
         postContent, msg: '글이 작성되었습니다!',
