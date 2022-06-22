@@ -11,10 +11,10 @@ async function ContentList (req, res) {
    const CreateAt = moment().format("YYYY-MM-DD HH:mm:ss");
    const UpdateAt = moment().format("YYYY-MM-DD HH:mm:ss");
 
-    res.status(200).json( { contentList
+    res.status(200).json( {
         contentList : contentList.map((a) => ({ 
-            CreateAt: a.CreateAt,
-            UpdateAt: a.UpdateAt,
+            createdAt: a.createdAt,
+            UpdateAt : a.UpdateAt,
             userId : a.userId,
             title: a.title,
             content : a.content,
