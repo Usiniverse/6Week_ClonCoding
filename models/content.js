@@ -6,7 +6,7 @@ const ContentSchema = mongoose.Schema(
         content: String, 
         title: String, 
         imageURL: [String], 
-        price : Number
+        price : String,
 
         },
         
