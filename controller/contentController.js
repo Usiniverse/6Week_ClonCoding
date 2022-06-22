@@ -1,4 +1,5 @@
 const Content = require("../models/content");
+const moment = require("moment");
 const moment = require("moment-timezone");
 moment.tz("Asia/Seoul");
 
@@ -6,31 +7,23 @@ moment.tz("Asia/Seoul");
 // 게시글 목록 조회 API
 async function ContentList (req, res) {
     const contentList = await Content
-    .find()
-    .sort({ CreatedAt : 'desc' })
-
-    res.status(200).json(contentList)
-    // const CreateAt = moment().format("YYYY-MM-DD HH:mm:ss");
-    // const UpdateAt = moment().format("YYYY-MM-DD HH:mm:ss");
-
-    // res.status(200).json( {
-    //     contentList : contentList.map((a) => {
-
-    //         console.log(a);
-    //         return { 
-    //             CreatedAt: a.CreateAt,
-    //             UpdateAt: a.UpdateAt,
-    //             userId : a.userId,
-    //             postId: a.postId,
-    //             title: a.title,
-    //             content : a.content,
-    //             imageURL: a.imageURL,
-    //             price : a.price
-    //         }
-    //     }
-    // )
-    // });
-};
+     .find()
+     .sort({ createdAt : 'desc' })
+ 
+     var today = new Date();
+     const CreateAt = today.toTimeString('ko-KR').split(" ")[0];
+     res.status(200).json( {
+         contentList : contentList.map((a) => ({ 
+             postId: a.postId,
+             userId : a.userId,
+             title: a.title,
+             content : a.content,
+             imageURL: a.imageURL,
+             price : a.price,
+             CreateAt,
+         }))
+      });
+ };
 
 
 // 게시글 작성 API
