@@ -1,27 +1,35 @@
 const Content = require("../models/content");
-const moment = require("moment");
+const moment = require("moment-timezone");
+// moment.tz("Asia/Seoul");
 
 
 // 게시글 목록 조회 API
 async function ContentList (req, res) {
-   const contentList = await Content
+    const contentList = await Content
     .find()
-    .sort({ createdAt : 'desc' })
-   
-   const CreateAt = moment().format("YYYY-MM-DD HH:mm:ss");
-   const UpdateAt = moment().format("YYYY-MM-DD HH:mm:ss");
+    .sort({ CreatedAt : 'desc' })
 
-    res.status(200).json( {
-        contentList : contentList.map((a) => ({ 
-            postId: a.postId,
-            userId : a.userId,
-            title: a.title,
-            content : a.content,
-            imageURL: a.imageURL,
-            price : a.price,
-            CreateAt,UpdateAt
-        }))
-     });
+    res.status(200).json(contentList)
+    // const CreateAt = moment().format("YYYY-MM-DD HH:mm:ss");
+    // const UpdateAt = moment().format("YYYY-MM-DD HH:mm:ss");
+
+    // res.status(200).json( {
+    //     contentList : contentList.map((a) => {
+
+    //         console.log(a);
+    //         return { 
+    //             CreatedAt: a.CreateAt,
+    //             UpdateAt: a.UpdateAt,
+    //             userId : a.userId,
+    //             postId: a.postId,
+    //             title: a.title,
+    //             content : a.content,
+    //             imageURL: a.imageURL,
+    //             price : a.price
+    //         }
+    //     }
+    // )
+    // });
 };
 
 
@@ -30,7 +38,7 @@ async function writeContent (req, res) {
     const { userId } = res.locals.user;
     const { title, content, imageURL, price} = req.body;
 
-    const CreateAt = moment().format("YYYY-MM-DD HH:mm:ss");
+    const CreateAt = moment().utc().add(9,'hours').format("YYYY-MM-DD HH:mm:ss");
     // const UpdateAt = moment().format("YYYY-MM-DD HH:mm:ss");
 
     const postContent = await Content.create({
@@ -45,15 +53,15 @@ async function writeContent (req, res) {
 async function modifyContent (req, res) {
     const { userId } = res.locals.user
     const { postId } = req.params;
-    const { title, content, updateAt, imageURL , price} = req.body;
+    const { title, content, imageURL, price} = req.body;
     const findContent = await Content.findById(postId);
 
     if(userId !== findContent.userId){
         await res.status(400).json({errorMessage : "접근 권한이 없습니다!"})
     }
-   
+
     const UpdateAt = moment().format("YYYY-MM-DD HH:mm:ss");
-        
+
     const modifyPosting = await Content.findByIdAndUpdate(postId, {
         $set: { title: title, content: content, UpdateAt: UpdateAt, imageURL: imageURL, price: price },
     });
