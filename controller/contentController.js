@@ -19,7 +19,8 @@ async function ContentList (req, res) {
             content : a.content,
             imageURL: a.imageURL,
             price : a.price
-        })),CreateAt,UpdateAt
+            ,CreateAt,UpdateAt
+        }))
      });
 };
 
