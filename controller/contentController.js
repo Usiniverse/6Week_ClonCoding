@@ -1,27 +1,35 @@
 const Content = require("../models/content");
 const moment = require("moment");
+moment.tz("Asia/Seoul");
 
 
 // 게시글 목록 조회 API
 async function ContentList (req, res) {
-   const contentList = await Content
+    const contentList = await Content
     .find()
-    .sort({ createdAt : 'desc' })
+    .sort({ CreatedAt : 'desc' })
 
-    var today = new Date();
-    const CreateAt = today.toTimeString('ko-KR')
+    res.status(200).json(contentList)
+    // const CreateAt = moment().format("YYYY-MM-DD HH:mm:ss");
+    // const UpdateAt = moment().format("YYYY-MM-DD HH:mm:ss");
 
-    res.status(200).json( {
-        contentList : contentList.map((a) => ({ 
-            postId: a.postId,
-            userId : a.userId,
-            title: a.title,
-            content : a.content,
-            imageURL: a.imageURL,
-            price : a.price,
-            CreateAt,
-        }))
-     });
+    // res.status(200).json( {
+    //     contentList : contentList.map((a) => {
+
+    //         console.log(a);
+    //         return { 
+    //             CreatedAt: a.CreateAt,
+    //             UpdateAt: a.UpdateAt,
+    //             userId : a.userId,
+    //             postId: a.postId,
+    //             title: a.title,
+    //             content : a.content,
+    //             imageURL: a.imageURL,
+    //             price : a.price
+    //         }
+    //     }
+    // )
+    // });
 };
 
 
@@ -29,15 +37,16 @@ async function ContentList (req, res) {
 async function writeContent (req, res) {
     const { userId } = res.locals.user;
     const { title, content, imageURL, price} = req.body;
-   
-    var today = new Date();
-    const CreateAt = today.toTimeString('ko-KR')
-   
+
+    const CreateAt = moment().format("YYYY-MM-DD HH:mm:ss");
+    // const UpdateAt = moment().format("YYYY-MM-DD HH:mm:ss");
+
     const postContent = await Content.create({
-        userId, title, content, imageURL, price, CreateAt });
+        userId, title, content, imageURL, price, CreateAt});
         
     res.status(201).json({ 
-        postContent, msg: '글이 작성되었습니다!', })
+        postContent, msg: '글이 작성되었습니다!',
+})
 };
 
 // 게시글 수정 API(patch)
