@@ -9,7 +9,7 @@ async function ContentList (req, res) {
     .sort({ createdAt : 'desc' })
 
     var today = new Date();
-    const CreateAt = today.toTimeString('ko-KR',Options).format("YYYY-MM-DD HH:mm:ss");
+    const CreateAt = today.toTimeString('ko-KR')
 
     res.status(200).json( {
         contentList : contentList.map((a) => ({ 
@@ -31,7 +31,7 @@ async function writeContent (req, res) {
     const { title, content, imageURL, price} = req.body;
    
     var today = new Date();
-    const CreateAt = today.toTimeString('ko-KR',Options).format("YYYY-MM-DD HH:mm:ss");
+    const CreateAt = today.toTimeString('ko-KR')
    
     const postContent = await Content.create({
         userId, title, content, imageURL, price, CreateAt });
