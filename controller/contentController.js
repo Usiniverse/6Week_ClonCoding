@@ -13,6 +13,7 @@ async function ContentList (req, res) {
 
     res.status(200).json( {
         contentList : contentList.map((a) => ({ 
+            postId: a.postId,
             createdAt: a.createdAt,
             UpdateAt : a.UpdateAt,
             userId : a.userId,
