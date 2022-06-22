@@ -50,9 +50,11 @@ async function modifyContent (req, res) {
     if(userId !== findContent.userId){
         await res.status(400).json({errorMessage : "접근 권한이 없습니다!"})
     }
+   
+    const UpdateAt = moment().format("YYYY-MM-DD HH:mm:ss");
         
     const modifyPosting = await Content.findByIdAndUpdate(postId, {
-        $set: { title: title, content: content, updateAt: updateAt, imageURL: imageURL, price: price },
+        $set: { title: title, content: content, UpdateAt: UpdateAt, imageURL: imageURL, price: price },
     });
     res.status(201).json({
         modifyPosting,
